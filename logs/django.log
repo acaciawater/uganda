@@ -1,0 +1,179 @@
+Not Found: /
+Not Found: /
+Not Found: /
+Not Found: /
+Not Found: /
+Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 119, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 366, in resolve
+    for pattern in self.url_patterns:
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 402, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 396, in urlconf_module
+    self._urlconf_module = import_module(self.urlconf_name)
+  File "/home/theo/python2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/home/theo/texelmeet/uganda/uganda/urls.py", line 26, in <module>
+    urlpatterns = [url(r'^$', HomeView.as_view(), name='home'),
+NameError: name 'HomeView' is not defined
+Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 119, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 366, in resolve
+    for pattern in self.url_patterns:
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 402, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 396, in urlconf_module
+    self._urlconf_module = import_module(self.urlconf_name)
+  File "/home/theo/python2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/home/theo/texelmeet/uganda/uganda/urls.py", line 26, in <module>
+    urlpatterns = [url(r'^$', HomeView.as_view(), name='home'),
+NameError: name 'HomeView' is not defined
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 132, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 89, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 159, in get
+    return self.render_to_response(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 133, in render_to_response
+    template=self.get_template_names(),
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 146, in get_template_names
+    "TemplateResponseMixin requires either a definition of "
+ImproperlyConfigured: TemplateResponseMixin requires either a definition of 'template_name' or an implementation of 'get_template_names()'
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 119, in get_response
+    resolver_match = resolver.resolve(request.path_info)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 366, in resolve
+    for pattern in self.url_patterns:
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 402, in url_patterns
+    patterns = getattr(self.urlconf_module, "urlpatterns", self.urlconf_module)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 396, in urlconf_module
+    self._urlconf_module = import_module(self.urlconf_name)
+  File "/home/theo/python2.7/lib/python2.7/importlib/__init__.py", line 37, in import_module
+    __import__(name)
+  File "/home/theo/texelmeet/uganda/uganda/urls.py", line 20, in <module>
+    url(r'^data/', include(acacia.data.urls,namespace='acacia')),
+AttributeError: 'module' object has no attribute 'urls'
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 132, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/base.py", line 89, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/detail.py", line 115, in get
+    self.object = self.get_object()
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/generic/detail.py", line 49, in get_object
+    % self.__class__.__name__)
+AttributeError: Generic detail view HomeView must be called with either an object pk or a slug.
+Not Found: /admin/project/1
+Not Found: /admin/project/1
+Not Found: /admin/project/1
+Not Found: /admin/project/1
+Not Found: /admin/project/1
+Internal Server Error: /admin/data/projectlocatie/add/
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 132, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/contrib/admin/options.py", line 616, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/utils/decorators.py", line 110, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/views/decorators/cache.py", line 57, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/contrib/admin/sites.py", line 233, in inner
+    return view(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/contrib/admin/options.py", line 1516, in add_view
+    return self.changeform_view(request, None, form_url, extra_context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/utils/decorators.py", line 34, in _wrapper
+    return bound_func(*args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/utils/decorators.py", line 110, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/utils/decorators.py", line 30, in bound_func
+    return func.__get__(self, type(self))(*args2, **kwargs2)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/utils/decorators.py", line 145, in inner
+    return func(*args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/contrib/admin/options.py", line 1467, in changeform_view
+    self.save_model(request, new_object, form, not add)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/contrib/admin/options.py", line 1078, in save_model
+    obj.save()
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/base.py", line 710, in save
+    force_update=force_update, update_fields=update_fields)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/base.py", line 738, in save_base
+    updated = self._save_table(raw, cls, force_insert, force_update, using, update_fields)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/base.py", line 822, in _save_table
+    result = self._do_insert(cls._base_manager, using, fields, update_pk, raw)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/base.py", line 861, in _do_insert
+    using=using, raw=raw)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/manager.py", line 127, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/query.py", line 920, in _insert
+    return query.get_compiler(using=using).execute_sql(return_id)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/models/sql/compiler.py", line 974, in execute_sql
+    cursor.execute(sql, params)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/backends/utils.py", line 79, in execute
+    return super(CursorDebugWrapper, self).execute(sql, params)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/backends/utils.py", line 64, in execute
+    return self.cursor.execute(sql, params)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/utils.py", line 97, in __exit__
+    six.reraise(dj_exc_type, dj_exc_value, traceback)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/db/backends/utils.py", line 64, in execute
+    return self.cursor.execute(sql, params)
+DataError: Geometry SRID (4326) does not match column SRID (28992)
+
+Internal Server Error: /
+Traceback (most recent call last):
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/handlers/base.py", line 164, in get_response
+    response = response.render()
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/response.py", line 158, in render
+    self.content = self.rendered_content
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/response.py", line 135, in rendered_content
+    content = template.render(context, self._request)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/backends/django.py", line 74, in render
+    return self.template.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 209, in render
+    return self._render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 201, in _render
+    return self.nodelist.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 903, in render
+    bit = self.render_node(node, context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/debug.py", line 79, in render_node
+    return node.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/loader_tags.py", line 135, in render
+    return compiled_parent._render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 201, in _render
+    return self.nodelist.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 903, in render
+    bit = self.render_node(node, context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/debug.py", line 79, in render_node
+    return node.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/base.py", line 903, in render
+    bit = self.render_node(node, context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/debug.py", line 79, in render_node
+    return node.render(context)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/defaulttags.py", line 217, in render
+    nodelist.append(node.render(context))
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/defaulttags.py", line 507, in render
+    six.reraise(*exc_info)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/template/defaulttags.py", line 493, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 579, in reverse
+    return force_text(iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs)))
+  File "/home/theo/iom/lib/python2.7/site-packages/django/core/urlresolvers.py", line 496, in _reverse_with_prefix
+    (lookup_view_s, args, kwargs, len(patterns), patterns))
+NoReverseMatch: Reverse for 'dashboard' with arguments '(u'Kampala',)' and keyword arguments '{}' not found. 0 pattern(s) tried: []
+Not Found: /data/dashboard/1/
+Not Found: /data/dashboard/1/
+Not Found: /admin/dashboard/1
