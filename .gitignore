@@ -1,5 +1,9 @@
 *.pyc
-logs/*
-media/*
+logs/
+media/
 secrets.py
+.settings/
+export/
+cert.crt
+cert.key
 
