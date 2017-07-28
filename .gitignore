@@ -1,3 +1,5 @@
 *.pyc
 logs/*
 media/*
+secrets.py
+
