@@ -15,7 +15,14 @@ class HomeView(ProjectDetailView):
 
     def get_object(self):
         return get_object_or_404(Project,pk=1)
-        
+
+    def get_context_data(self, **kwargs):
+        ctx = super(HomeView,self).get_context_data(**kwargs)
+        # adds ordered queryset to context
+        project = self.get_object()
+        ctx['locs'] = project.projectlocatie_set.order_by('sequence__order')
+        return ctx 
+
 class LatestInfoView(DetailView):
     model = ProjectLocatie
     template_name = 'latest.html'

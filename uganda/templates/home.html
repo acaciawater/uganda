@@ -83,7 +83,7 @@ $(function() {
 
 {% block content %}
 <div class="container">
-<div class="row row-fluid">
+<div class="row-fluid">
 <h3>{{object.name}}</h3>
 {{object.description|safe}}
 </div>
@@ -97,11 +97,11 @@ $(function() {
 </tr>
 </thead>
 <tbody>
-{% for loc in object.projectlocatie_set.all %}
+{% for loc in locs %}
 <tr>
 <td><a href="{% if loc.dashboard %}{% url 'acacia:tabgroup' loc.dashboard.pk %}{% endif %}">{{loc.name}}</a></td>
 <td>{{loc.description|safe}}</td>
-<td id="loc{{loc.id}}">Loading latest data...</td>
+<td id="loc{{loc.id}}">Loading data...</td>
 </tr>
 {% empty %}
     <p class="alert alert-danger"><b>Warning:</b> No locations found</p>
