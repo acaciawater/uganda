@@ -3,13 +3,25 @@
 {% load l10n %}
 {% block title %}Project {{object.name}}{% endblock title %}
 {% block extrastyle %}
+
 <style type="text/css">
-    td p img {
-		float:right;
-		width:33%;
-		height: auto;
-		padding: 0px 0px 8px 8px;    
-    }
+	#map {
+		width:100%;
+		height:400px;
+	}
+	/* inline images */
+     td p img { 
+ 		float:right; 
+ 		width:33%; 
+ 		height: auto; 
+ 		padding: 0px 0px 8px 8px;     
+     }
+	/* battery icon */
+     td img {
+     	height: 32px;
+     	width: auto;
+     	float:right;
+     } 
 </style>
 {% endblock %}
 {% block navbar %}{% endblock %}
@@ -20,12 +32,13 @@
 <script src="//maps.googleapis.com/maps/api/js?key={{apikey}}"></script>
 <script>
 var map;
+var locs;
 function initialize() {
     map = new google.maps.Map(document.getElementById('map'), {
         zoom: 14,
         mapTypeId: google.maps.MapTypeId.{{maptype}}
     });
-	var locs = {{content|safe}};
+	locs = {{content|safe}};
 	var bounds = new google.maps.LatLngBounds();
 	var infowindow = new google.maps.InfoWindow();
 	var marker;
@@ -42,7 +55,11 @@ function initialize() {
 	        }
 	      })(marker));
 		bounds.extend(marker.position);
+
+		var locid = loc.id.toString();
+		$("#loc"+locid).load("/latest/"+locid);
 	});
+	
 	if (locs.length > 1)
 		map.fitBounds(bounds);
 	else {
@@ -55,42 +72,41 @@ function initialize() {
 	}
 	
 }
-$(function(){initialize();});
+
+$(function() {
+	initialize();
+});
+
 </script>
 {% endlocalize %}
 {% endblock %}
 
 {% block content %}
-<div class = "container">
-<div class = "row-fluid">
+<div class="container">
+<div class="row row-fluid">
 <h3>{{object.name}}</h3>
 {{object.description|safe}}
 </div>
-<div id = map style="width:100%;height:400px;"></div>
-<table class="table table-striped">
+<div id=map></div>
+<table class="table table-responsive">
 <thead>
 <tr>
-<!-- <th>Foto</th> -->
 <th>Location</th>
 <th>Description</th>
+<th>Latest information</th>
 </tr>
 </thead>
 <tbody>
 {% for loc in object.projectlocatie_set.all %}
 <tr>
-{% if loc.dashboard %}
-	<td><a href="{% url 'acacia:tabgroup' loc.dashboard.pk %}">{{loc.name}}</a></td>
-{%else%}
-	<td><a href="">{{loc.name}}</a></td>
-{%endif%}
-
-<td>{%if loc.webcam%}<a href="{{loc.webcam.image}}"><img src="{{loc.webcam.image}}"/></a>{% endif %}{{loc.description|safe}}</td>
+<td><a href="{% if loc.dashboard %}{% url 'acacia:tabgroup' loc.dashboard.pk %}{% endif %}">{{loc.name}}</a></td>
+<td>{{loc.description|safe}}</td>
+<td id="loc{{loc.id}}">Loading latest data...</td>
 </tr>
 {% empty %}
     <p class="alert alert-danger"><b>Warning:</b> No locations found</p>
 {% endfor %}
 </tbody>
 </table>
-</div>
 </div>
 {% endblock content %}

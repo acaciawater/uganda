@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib import admin
 from .views import HomeView
 from filebrowser.sites import site
+from uganda.views import LatestInfoView
 
 admin.autodiscover()
 
@@ -17,6 +18,10 @@ urlpatterns = [url(r'^$', HomeView.as_view(), name='home'),
     url(r'^data/', include('acacia.data.urls',namespace='acacia')),
     url(r'^validation/', include('acacia.validation.urls',namespace='validation')),
     url(r'^accounts/', include('registration.urls')),
+    
+    #url(r'^info/(?P<pk>\d+)/$', latest_info, name='latest-info'),
+    #url(r'^latest/(?P<pk>\d+)/$', latest_location_info, name='latest-location-info'),
+    url(r'^latest/(?P<pk>\d+)/$', LatestInfoView.as_view(), name='latest-location-info'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
