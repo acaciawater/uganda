@@ -5,7 +5,7 @@
 {% if val.date %}
 <tr><td>date</td><td nowrap>{{val.date}}</td></tr>
 <tr><td>water level</td><td>{{val.level|floatformat:2}} m </td></tr>
-<tr><td>temperature</td><td>{{val.temp|floatformat:2}} &deg;C</td></tr>
+<tr><td>temperature</td><td>{{val.temp|floatformat:1}} &deg;C</td></tr>
 <tr><td>conductivity</td><td>{{val.ec|floatformat:2}} mS/cm</td></tr>
 <!-- <tr><td>battery</td><td>{{val.battery|floatformat:0}}%<img src="{{val.battery_url}}"></img></td> -->
 {% endif %}
