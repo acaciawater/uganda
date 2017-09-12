@@ -103,6 +103,8 @@ UPLOAD_DATAFILES = 'datafiles'
 UPLOAD_THUMBNAILS = 'thumbnails' 
 UPLOAD_IMAGES = 'images' 
 
+GPM_CACHE = os.path.join(MEDIA_ROOT, 'gpm')
+
 # Grapelli admin
 GRAPPELLI_ADMIN_TITLE='Site administration'
 
@@ -177,6 +179,11 @@ LOGGING = {
             'propagate': True,
         },
         'acacia': {
+            'handlers': ['file',],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'uganda': {
             'handlers': ['file',],
             'level': 'DEBUG',
             'propagate': True,
