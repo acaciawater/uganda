@@ -245,8 +245,8 @@ class GPM:
                 if success:
                     return self.get_cached_value(name, lon, lat)
             except Exception as e:
-                msg = unicode(e).split('\n')
-                logger.error(msg[0])
+                #msg = unicode(e).split('\n')
+                logger.error(e)
         return self.download_daily_value(date, lon, lat)
         
     def update_daily_tile(self, date, view=None):
@@ -265,8 +265,8 @@ class GPM:
                 logger.debug('Tile saved as {}'.format(filename))
                 return (filename,True)
             except HTTPError as e:
-                msg = unicode(e).split('\n')
-                logger.error(msg[0])
+                #msg = unicode(e).split('\n')
+                logger.error(e)
         return (filename,False) 
             
     def update_halfhourly_tile(self, time, view=None):
@@ -284,8 +284,8 @@ class GPM:
                 logger.debug('Tile saved as {}'.format(filename))
                 return (filename,True)
             except HTTPError as e:
-                msg = unicode(e).split('\n')
-                logger.error(msg[0])
+                #msg = unicode(e).split('\n')
+                logger.error(e)
         return (filename,False) 
             
     def process(self, start, stop, delta, callback, **kwargs):
@@ -338,7 +338,7 @@ class Daily(GenericCSV):
                   view=kwargs.get('view',defview))
         contents = ['date,precipitation']
         for date,value in gpm.iter(start, stop, timedelta(days=1), gpm.get_daily_value, lon=lon, lat=lat):
-            contents.append('{:%Y-%m-%d},{}'.format(date,value or ''))
+            contents.append('{:%Y-%m-%d},{}'.format(date,value))
         
         filename = 'gpm_{lon:04d}{lat:04d}_{start:%Y%m%d}{stop:%Y%m%d}.csv'.format(lon=int(lon*10),lat=int(lat*10),start=start,stop=stop)
         filename = kwargs.get('filename', filename)
