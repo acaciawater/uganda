@@ -1,0 +1,80 @@
+{% extends 'data/highstock.html' %}
+{% block title %}{{chart.name}}{% endblock title %}
+{% block navbar %}{% endblock %}
+{% block global %}
+<!-- <script src="https://cdn.jsdelivr.net/momentjs/2.18.1/moment.min.js"></script> -->
+<script>
+Highcharts.setOptions({
+	  global: {
+		useUTC: false,
+		},
+	  }
+	);
+</script>
+{% endblock %}
+{% block brandname %}<a class="navbar-brand">{{chart.name}}</a>{% endblock brandname %}
+{% block admin_url %}chart/{{chart.id}}{% endblock %}
+{% block extrastyle %}
+<style>
+body, html {
+  height: 100%;
+  margin: 0px;
+}
+
+.fill {
+  height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+}
+
+#container {
+  width: 100%;
+  height: 90%;
+}
+
+</style>
+{% endblock %}
+{% block chartloader %}
+	<script>
+		function fetchSeries() {
+		    $.ajax({
+			    url: '/data/get/chart/{{chart.id}}',
+			    datatype: "json",
+ 			    beforeSend: function(hdr) {
+ 				  	var chart = $('#container').highcharts();
+ 			    	chart.showLoading("Loading data...");
+ 			    	return true;
+ 			    },
+			    success: function(data) {
+				  	var chart = $('#container').highcharts();
+				  	$.each(data,function(key,values) {
+				  		var series = chart.get(key);
+						series.setData(values);
+				  	});
+			    },
+			    error: function(hdr,status,errorThrown) {
+			    	//alert("Fout tijdens laden van tijdreeks: " + errorThrown);
+			    },
+ 			    complete: function(hdr, status) {
+ 				  	var chart = $('#container').highcharts();
+ 			    	chart.hideLoading();
+ 			    }
+		    });
+		}
+		
+		$(function () {
+		  var opt = {{options|safe}};
+		  opt.chart.events.load = fetchSeries;
+		  chart = $('#container').highcharts(opt);
+		});
+	</script>
+{% endblock %}
+{% block content %}
+<div id="container"></div>
+<br/>
+<div class="text-center">
+<a href="{% url 'acacia:chart-csv' chart.id %}" class="btn btn-primary active" data-toggle="tooltip" title="Download timeseries as csv" id="download">Download</a>
+</div>
+{% endblock %}
