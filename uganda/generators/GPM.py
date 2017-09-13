@@ -27,7 +27,7 @@ class GPM:
         urlday = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.04/{year}/{month:02}/3B-DAY-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S000000-E235959.V04.nc4'
         urlm30 = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/hyrax/GPM_L3/GPM_3IMERGHHL.04/{year}/{doy:03}/3B-HHR-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S{hour:02}{start:04}-E{hour:02}{end:04}.0000.V04B.HDF5'
 
-        # regex pattern for cache rasters
+        # regex pattern for naming cache rasters
         pattern = r'(?P<name>\w+)_(?P<west>\d{4})(?P<north>\d{4})(?P<east>\d{4})(?P<south>\d{4})_(?P<date>\d+)\.tif'
         
         @classmethod
@@ -46,7 +46,7 @@ class GPM:
 
         @classmethod
         def name_day(self, view, date, name='precipitationCal'):
-            """ return name for tile with daily values"""
+            """ return name for cached tile with daily values"""
             left,bottom,right,top = GPM.lbrt(view)
             return self.day.format(
                 name=name,
@@ -58,7 +58,7 @@ class GPM:
     
         @classmethod
         def name_m30(self, view, time, name='precipitationCal'):
-            """ return name for tile with 30 minute values """
+            """ return name for cached tile with 30 minute values """
             left,bottom,right,top = GPM.lbrt(view)
             return self.m30.format(
                 name=name,
@@ -70,6 +70,7 @@ class GPM:
             
         @classmethod
         def parse(self,name):
+            """ parse cache filename into name, extent and timestamp """
             import re
             m = re.match(self.pattern, name)
             return m.groupdict() if m else {}
@@ -114,14 +115,15 @@ class GPM:
         return (left,bottom,right,top)
 
     def download_tile(self,view,filename):
-        """ download and save view of current dataset as geotiff """
+        """ download and save view of current dataset as geotiff in cache """
 
         left,bottom,right,top = GPM.lbrt(view)
         
         # download the precipitation dataset
         tile = self.dataset.precipitationCal[left:right,bottom:top]
 
-        # swap cols and rows
+        # The GPM NetCDF files have latitude along columns and longitude along rows with origin at (-180,-90)
+        # For geotiff file we need to swap cols and rows
         data = tile.data.astype(np.float32).transpose()
         
         # ensure cache folder exists
@@ -144,14 +146,16 @@ class GPM:
         tif.SetProjection(wgs84)
          
         # setup geotransform
+        # Origin is (west,south) and pixel size is 0.1 degree
         tif.SetGeoTransform([view[0],0.1,0,view[1],0,0.1])
 
         # write data to file
         tif.GetRasterBand(1).WriteArray(data)
 
     def find_daily(self, date, lon, lat):
-        """ find the file in cache from lonlat coordinates """
-        
+        """ locate a raster file in cache using lonlat coordinates """
+        # TODO: this works for a small number of files. When the cache grows we may need to convert this to a database for indexing
+
         date = datetime.datetime(date.year,date.month,date.day) #ignore time
         logger.debug('searching cache for daily file at {} {} {}'.format(lon, lat, date.date()))
         x,y = self.rowcol(lon, lat)
@@ -187,7 +191,9 @@ class GPM:
         return None
     
     def download_value(self,lon,lat):
-        """ download single value at (lon,lat) from current open dataset """
+        """ Get a single value at (lon,lat) from current open dataset.
+            Note: this is a very inefficient for multiple values  
+        """
 
         x,y = GPM.rowcol(lon,lat)
         
@@ -196,20 +202,10 @@ class GPM:
         
         return pix.data[0,0]
 
-    def get_cached_value(self, filename, lon, lat):
-        """ get single value from cache """
-        path = os.path.join(self.cache, filename)
-        ds = gdal.OpenShared(path)
-        fwd = ds.GetGeoTransform()
-        inv = gdal.InvGeoTransform(fwd)
-        x,y = gdal.ApplyGeoTransform(inv,lon,lat)
-        x = int(max(0,min(ds.RasterXSize-1,x)))
-        y = int(max(0,min(ds.RasterYSize-1,y)))
-        value = ds.GetRasterBand(1).ReadAsArray(x,y,1,1)
-        return value[0][0]
-
     def download_daily_value(self, date, lon, lat):
-        """ download daily value from dap server """
+        """ Download daily value from dap server 
+            Note: this is a very inefficient for multiple values  
+        """
         url = GPM.Template.url_day(date)
         print date, url
         try:
@@ -221,7 +217,9 @@ class GPM:
         return None
 
     def download_halfhourly_value(self, time, lon, lat):
-        """ download daily value from dap server """
+        """ Download daily value from dap server 
+            Note: this is a very inefficient for multiple values  
+        """
         url = GPM.Template.url_hh(time)
         print time, url
         try:
@@ -232,14 +230,30 @@ class GPM:
             print msg[0] 
         return None
 
+    def get_cached_value(self, filename, lon, lat):
+        """ Get a single value at (lon,lat) from cache """
+        path = os.path.join(self.cache, filename)
+        ds = gdal.OpenShared(path)
+        fwd = ds.GetGeoTransform()
+        inv = gdal.InvGeoTransform(fwd)
+        # older versions of gdal have a different signature of InvGeoTransform()
+        if inv and len(inv) == 2:
+            _success,inv = inv
+        x,y = gdal.ApplyGeoTransform(inv,lon,lat)
+        x = int(max(0,min(ds.RasterXSize-1,x)))
+        y = int(max(0,min(ds.RasterYSize-1,y)))
+        value = ds.GetRasterBand(1).ReadAsArray(x,y,1,1)
+        return value[0][0]
+
     def get_daily_value(self, date, lon, lat):
-        """ get single value from cache, download tile if cached file does not exist """
+        """ Get single value at (lon,lat) from cache, download a tile if cached file does not exist """
         found = self.find_daily(date, lon, lat)
         if found:
             _path, name = found
             logger.debug('Retrieving value from cache')
             return self.get_cached_value(name, lon, lat)
         else:
+            # data for (date,lon,lat) is not in cache, download tile and try again
             try:
                 name, success = self.update_daily_tile(date)
                 if success:
@@ -250,7 +264,7 @@ class GPM:
         return self.download_daily_value(date, lon, lat)
         
     def update_daily_tile(self, date, view=None):
-        """ update single raster in cache """
+        """ Update a single raster in cache """
         view = view or self.view
         assert view, 'No view defined'
         filename = GPM.Template.name_day(view, date)
@@ -270,6 +284,7 @@ class GPM:
         return (filename,False) 
             
     def update_halfhourly_tile(self, time, view=None):
+        """ Update a single raster in cache """
         view = view or self.view
         assert view, 'No view defined'
         filename = GPM.Template.name_m30(view, time)
@@ -347,42 +362,3 @@ class Daily(GenericCSV):
             callback = kwargs['callback']
             callback(result)
         return result
-
-if __name__ == '__main__':
-    start = datetime.datetime(2017,9,1)
-    stop = datetime.datetime(2017,9,11)
-    akokorio = (33.84766944, 1.858688889)
-    lon,lat = akokorio
-    cache = '/home/theo/src/gpm/gpm/gpm/data/flip'
-    view = (29,-2,35,5)
-    options = {
-        'cache': cache,
-        'view': view,
-        'username': 'tkleinen',
-        'password': 'pw4EarthData'
-    }
-    gpm = GPM(**options)
-#    print gpm.lbrt(view)
-#    print gpm.rowcol(lon, lat)
-#     name = gpm.find_daily(start, lon, lat)
-    
-#    name = GPM.Template.name_day(view, start)
-#     components = GPM.Template.parse(name)
-#     print components
-    
-    gpm.update_daily_tiles(start, stop)
-    with open(os.path.join(cache,'akokorio-cache.csv'),'w') as csv:
-        csv.write('date,precipitation\n')
-        lon,lat = akokorio
-        for date, value in gpm.iter(start, stop, timedelta(days=1), gpm.get_daily_value, lon=lon, lat=lat):
-            csv.write('{:%Y-%m-%d},{:2f}\n'.format(date,value))
-
-    with open(os.path.join(cache,'akokorio-server.csv'),'w') as csv:
-        csv.write('date,precipitation\n')
-        lon,lat = akokorio
-        for date, value in gpm.iter(start, stop, timedelta(days=1), gpm.download_daily_value, lon=lon, lat=lat):
-            csv.write('{:%Y-%m-%d},{:2f}\n'.format(date,value))
-             
-    
-    #gpm.update_halfhourly(view, start, stop)
-    
