@@ -9,6 +9,7 @@ from acacia.data.models import Project, ProjectLocatie
 from django.shortcuts import get_object_or_404
 from uganda.helpers import Latest
 from django.views.generic import DetailView
+from . import settings
 
 class HomeView(ProjectDetailView):
     template_name = 'home.html'
@@ -21,6 +22,7 @@ class HomeView(ProjectDetailView):
         # adds ordered queryset to context
         project = self.get_object()
         ctx['locs'] = project.projectlocatie_set.order_by('sequence__order')
+        ctx['MEDIA_URL'] = settings.MEDIA_URL
         return ctx 
 
 class LatestInfoView(DetailView):
