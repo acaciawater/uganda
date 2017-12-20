@@ -26,7 +26,7 @@ class GPM:
         day = '{name}_{west:04}{north:04}{east:04}{south:04}_{date:%Y%m%d}.tif'
         m30 = '{name}_{west:04}{north:04}{east:04}{south:04}_{time:%Y%m%d%M%H}.tif'
         urlday = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.{GPM_version}/{year}/{month:02}/3B-DAY-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S000000-E235959.V{GPM_version}.nc4'
-        urlm30 = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/hyrax/GPM_L3/GPM_3IMERGHHL.04/{year}/{doy:03}/3B-HHR-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S{hour:02}{start:04}-E{hour:02}{end:04}.0000.V04B.HDF5'
+        urlm30 = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/hyrax/GPM_L3/GPM_3IMERGHHL.{GPM_version}/{year}/{doy:03}/3B-HHR-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S{hour:02}{start:04}-E{hour:02}{end:04}.0000.V{GPM_version}B.HDF5'
 
         # regex pattern for naming cache rasters
         pattern = r'(?P<name>\w+)_(?P<west>\d{4})(?P<north>\d{4})(?P<east>\d{4})(?P<south>\d{4})_(?P<date>\d+)\.tif'
@@ -46,11 +46,14 @@ class GPM:
         @classmethod
         def url_m30(self,time):
             """ return url for 30 minute values (late run) """
+            # Determine whether to use version 04 or 05 of GPM
+            GPM_version = '04'
+                
             #determine day-of-year and start/end in minutes
             doy = (time - datetime.date(time.year,1,1)).days + 1
             start = 0 if time.minute < 30 else 3000
             end = 2959 if time.minute < 30 else 5959
-            return self.urlm30.format(year = time.year, doy = doy, month = time.month, day = time.day, hour=time.hour, start=start,end=end)
+            return self.urlm30.format(year = time.year, doy = doy, month = time.month, day = time.day, hour=time.hour, start=start, end=end, GPM_version=GPM_version)
 
         @classmethod
         def name_day(self, view, date, name='precipitationCal'):
@@ -343,7 +346,7 @@ class GPM:
 class Daily(GenericCSV):
     """ retrieves daily timeseries from GPM and stores as csv """
     
-    url = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.04'
+    url = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.05'
    
     def download(self, **kwargs):
         from pytz import utc
@@ -361,6 +364,8 @@ class Daily(GenericCSV):
                   view=kwargs.get('view',defview))
         contents = ['date,precipitation']
         for date,value in gpm.iter(start, stop, timedelta(days=1), gpm.get_daily_value, lon=lon, lat=lat):
+            if value is None:
+                value = float('nan')
             contents.append('{:%Y-%m-%d},{}'.format(date,value))
         
         filename = 'gpm_{lon:04d}{lat:04d}_{start:%Y%m%d}{stop:%Y%m%d}.csv'.format(lon=int(lon*10),lat=int(lat*10),start=start,stop=stop)
