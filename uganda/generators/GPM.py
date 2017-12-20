@@ -10,6 +10,7 @@ import datetime
 from datetime import timedelta
 from webob.exc import HTTPError
 from acacia.data.generators.generic import GenericCSV
+from acacia.data.models import aware
 from django.conf import settings
 
 import logging
@@ -24,7 +25,7 @@ class GPM:
         # format strings
         day = '{name}_{west:04}{north:04}{east:04}{south:04}_{date:%Y%m%d}.tif'
         m30 = '{name}_{west:04}{north:04}{east:04}{south:04}_{time:%Y%m%d%M%H}.tif'
-        urlday = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.04/{year}/{month:02}/3B-DAY-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S000000-E235959.V04.nc4'
+        urlday = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/GPM_L3/GPM_3IMERGDL.{GPM_version}/{year}/{month:02}/3B-DAY-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S000000-E235959.V{GPM_version}.nc4'
         urlm30 = 'https://gpm1.gesdisc.eosdis.nasa.gov/opendap/hyrax/GPM_L3/GPM_3IMERGHHL.04/{year}/{doy:03}/3B-HHR-L.MS.MRG.3IMERG.{year}{month:02}{day:02}-S{hour:02}{start:04}-E{hour:02}{end:04}.0000.V04B.HDF5'
 
         # regex pattern for naming cache rasters
@@ -33,7 +34,14 @@ class GPM:
         @classmethod
         def url_day(self,date):
             """ return url for daily accumulated values (late run) """
-            return self.urlday.format(year = date.year, month = date.month, day = date.day)
+            # Determine whether to use version 04 or 05 of GPM
+            version_switch_date = datetime.date(2017,12,1)
+            if (date.date() >= version_switch_date):
+                GPM_version = '05'
+            else
+                GPM_version = '04'
+            
+            return self.urlday.format(year = date.year, month = date.month, day = date.day, GPM_version = GPM_version)
         
         @classmethod
         def url_m30(self,time):
@@ -304,13 +312,13 @@ class GPM:
         return (filename,False) 
             
     def process(self, start, stop, delta, callback, **kwargs):
-        date = start
+        date = aware(start)
         while date < stop:
             callback(date,**kwargs)
             date = date + delta
 
     def iter(self, start, stop, delta, callback, **kwargs):
-        date = start
+        date = aware(start)
         while date < stop:
             yield date,callback(date,**kwargs)
             date = date + delta
