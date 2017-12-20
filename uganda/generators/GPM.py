@@ -35,10 +35,10 @@ class GPM:
         def url_day(self,date):
             """ return url for daily accumulated values (late run) """
             # Determine whether to use version 04 or 05 of GPM
-            version_switch_date = datetime.date(2017,12,1)
-            if (date.date() >= version_switch_date):
+            test_date = datetime.date(2017,12,1)
+            if (date.date() >= test_date):
                 GPM_version = '05'
-            else
+            else:
                 GPM_version = '04'
             
             return self.urlday.format(year = date.year, month = date.month, day = date.day, GPM_version = GPM_version)
