@@ -45,7 +45,7 @@ function initialize() {
 	locs.forEach(function(loc) {
    		marker = new google.maps.Marker({
    			position: new google.maps.LatLng(loc.lat,loc.lon),
-			title: "Locatie "+ loc.name, 
+			title: "Location "+ loc.name, 
    			map: map
    		});
    		google.maps.event.addListener(marker, 'click', (function(marker) {
