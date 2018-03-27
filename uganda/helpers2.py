@@ -16,20 +16,18 @@ class Latest(object):
                 return s.datapoints.latest('date').value
             except:
                 return None
-        tahmo = loc.datasource_set.filter(generator__classname__icontains='Tahmo').first()
-        stop = tahmo.stop() if tahmo else None
-        #bat = loc.series_set.filter(name__istartswith='bat').first()
-        #level = loc.series_set.filter(name__istartswith='gauge').first()
+        decagon = loc.datasource_set.filter(generator__classname__icontains='decagon').first()
+        stop = decagon.stop() if decagon else None
+        bat = loc.series_set.filter(name__istartswith='bat').first()
+        level = loc.series_set.filter(name__istartswith='gauge').first()
         temp  = loc.series_set.filter(name__istartswith='temp').first()
-        precipitation = loc.series_set.filter(name__istartswith='prec').first()
-        #ec  = loc.series_set.filter(name__istartswith='EC').first()
-        battery = None #last(bat)
+        ec  = loc.series_set.filter(name__istartswith='EC').first()
+        battery = last(bat)
         url = None if battery is None else '{url}bat{level}.png'.format(url=settings.STATIC_URL, level=int(battery/20)) 
         return {'date': stop,
                 'battery': battery,
-                'level': '-',
-                'precipitation': last(precipitation),
+                'level': last(level),
                 'temp': last(temp),
-                'ec': '-',
+                'ec': last(ec),
                 'battery_url': url, 
                 }
