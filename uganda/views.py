@@ -23,6 +23,7 @@ class HomeView(ProjectDetailView):
         project = self.get_object()
         ctx['locs'] = project.projectlocatie_set.order_by('sequence__order')
         ctx['MEDIA_URL'] = settings.MEDIA_URL
+        ctx['maptype'] = 'SATELLITE'
         return ctx 
 
 class LatestInfoView(DetailView):

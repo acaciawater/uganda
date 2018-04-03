@@ -21,8 +21,6 @@ os.sys.path.append('/home/theo/texelmeet/acaciadata')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SITE_ID = 1
-
 ALLOWED_HOSTS = ['.acaciadata.com', 'localhost']
 
 # Application definition
