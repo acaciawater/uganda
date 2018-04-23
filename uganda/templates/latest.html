@@ -11,9 +11,6 @@
 {% if val.precipitation %}
 <tr><td>precipitation</td><td>{{val.precipitation|floatformat:2}} mm</td></tr>
 {% endif %}
-{% if val.waterlevel %}
-<tr><td>water level</td><td>{{val.waterlevel|floatformat:2}} m</td></tr>
-{% endif %}
 {% endfor %}
 </tbody>
 </table>

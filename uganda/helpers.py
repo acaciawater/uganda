@@ -23,9 +23,7 @@ class Latest(object):
         stop = tahmo.stop() if tahmo else stop
         temp  = loc.series_set.filter(name__istartswith='temp').first()
         precipitation = loc.series_set.filter(name__istartswith='prec').first()
-        waterlevel = loc.series_set.filter(name__icontains='waterlevel').first()
         return {'date': stop,
                 'precipitation': last(precipitation),
-                'temp': last(temp),
-		'waterlevel': last(level)
+                'temp': last(temp)
                 }
