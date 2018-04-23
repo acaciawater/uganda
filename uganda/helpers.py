@@ -21,18 +21,11 @@ class Latest(object):
         stop = csv.stop() if csv else None
         tahmo = loc.datasource_set.filter(generator__classname__icontains='Tahmo').first()
         stop = tahmo.stop() if tahmo else stop
-        #bat = loc.series_set.filter(name__istartswith='bat').first()
-        #level = loc.series_set.filter(name__istartswith='gauge').first()
         temp  = loc.series_set.filter(name__istartswith='temp').first()
         precipitation = loc.series_set.filter(name__istartswith='prec').first()
-        #ec  = loc.series_set.filter(name__istartswith='EC').first()
-        battery = None #last(bat)
-        url = None if battery is None else '{url}bat{level}.png'.format(url=settings.STATIC_URL, level=int(battery/20))
+        waterlevel = loc.series_set.filter(name__icontains='waterlevel').first()
         return {'date': stop,
-                'battery': battery,
-                'level': '-',
                 'precipitation': last(precipitation),
                 'temp': last(temp),
-                'ec': '-',
-                'battery_url': url, 
+		'waterlevel': last(level)
                 }
